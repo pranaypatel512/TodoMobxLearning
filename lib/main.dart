@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_mobx_learning/TodoList.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,4 +115,29 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+
+/*Add to do widget*/
+class AddTodo extends StatelessWidget{
+
+  final _textController = TextEditingController(text: '');
+
+  AddTodo({Key? key}):super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final list = Provider.of<TodoList>(context);
+
+    return TextField(autofocus: true,
+    decoration: const InputDecoration(labelText: "Add new Todo",contentPadding: EdgeInsets.all(8)),
+      controller: _textController,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (String value){
+        list.addTodo(value);
+        _textController.clear();
+      },
+    );
+  }
+
 }
