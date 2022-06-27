@@ -1,15 +1,9 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'todo.g.dart';
 
-@JsonSerializable()
-class Todo extends _Todo with _$Todo {
-  Todo(String description) : super(description);
 
-  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
-  Map<String, dynamic> toJson() => _$TodoToJson(this);
-}
+class Todo = _Todo with _$Todo;
 
 abstract class _Todo with Store {
   _Todo(this.description);
