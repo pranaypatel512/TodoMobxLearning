@@ -56,5 +56,29 @@ abstract class _TodoList with Store{
   bool get canMarkAllCompleted =>
       hasPendingTodos && filter != VisibilityFilter.completed;
 
+  @action
+  void addTodo(String description){
+    todos.add(Todo(description));
+  }
+
+  @action
+  void removeTodo(Todo todo){
+    todos.removeWhere((item)=>item==todo);
+  }
+
+  @action
+  void changeFilter(VisibilityFilter filter) => this.filter=filter;
+
+  @action
+  void removeCompleted(){
+    todos.removeWhere((element) => element.done);
+  }
+
+  @action
+  void markAllAsCompleted(){
+    for (final todo in todos) {
+      todo.done = true;
+    }
+  }
 
 }
