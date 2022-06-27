@@ -117,27 +117,84 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 /*Add to do widget*/
-class AddTodo extends StatelessWidget{
-
+class AddTodo extends StatelessWidget {
   final _textController = TextEditingController(text: '');
 
-  AddTodo({Key? key}):super(key: key);
+  AddTodo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final list = Provider.of<TodoList>(context);
 
-    return TextField(autofocus: true,
-    decoration: const InputDecoration(labelText: "Add new Todo",contentPadding: EdgeInsets.all(8)),
+    return TextField(
+      autofocus: true,
+      decoration: const InputDecoration(
+          labelText: "Add new Todo", contentPadding: EdgeInsets.all(8)),
       controller: _textController,
       textInputAction: TextInputAction.done,
-      onSubmitted: (String value){
+      onSubmitted: (String value) {
         list.addTodo(value);
         _textController.clear();
       },
     );
   }
+}
 
+/*Action bar widget*/
+
+class ActionBar extends StatelessWidget {
+  const ActionBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final list = Provider.of<TodoList>(context);
+
+    return Column(
+      children: <Widget>[
+        Observer(
+          builder: (_) {
+            final selections = VisibilityFilter.values
+                .map((e) => e == list.filter)
+                .toList(growable: false);
+
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: ToggleButtons(
+                    borderRadius: BorderRadius.circular(8),
+                    onPressed: (index) {
+                      list.filter = VisibilityFilter.values[index];
+                    },
+                    isSelected: selections,
+                    children: const <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Text("All"),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Text("Pending"),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Text("Completed"),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+        Observer(builder: (_) =>
+          ButtonBar(children: <Widget>[
+            ElevatedButton(onPressed: list.canRemoveAllCompleted ? list.removeCompleted : null, child: const Text('Remove Completed')),
+            ElevatedButton(onPressed: list.canMarkAllCompleted ? list.markAllAsCompleted : null, child: const Text('Mark All Completed'))
+          ],)
+        )
+      ],
+    );
+  }
 }
